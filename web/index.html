@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="lib/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        .key { color: brown; }
+        .string { color: green; }
+        .number { color: blue; }
+        .boolean { color: red; }
+        .null { color: gray; }
+    </style>
+    <script defer>
+        function syntaxHighlight(json) {
+            json = JSON.stringify(json, null, 4);
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|\b\d+(\.\d+)?\b)/g, match => {
+                let cls = "number";
+                if (/^"/.test(match)) {
+                    cls = /:$/.test(match) ? "key" : "string";
+                } else if (/true|false/.test(match)) {
+                    cls = "boolean";
+                } else if (/null/.test(match)) {
+                    cls = "null";
+                }
+                return `<span class="${cls}">${match}</span>`;
+            });
+        }
+
+        window.onload = async function() {
+            let req = fetch("/api/data", {
+                method: "GET",
+            });
+            let res = await req;
+            let json = await res.json();
+            document.getElementById("response").innerHTML = syntaxHighlight(json);
+        };
+    </script>
+</head>
+
+<body> 
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-header">
+                    API response
+                </div>
+                <div class="card-body">
+                    <pre id="response"></pre>
+                </div>
+            </div>     
+        </div>
+    </div>
+    <script src="lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
