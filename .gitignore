@@ -6,4 +6,6 @@ Session.vim
 .directory
 .idea
 token.txt
-*/.env
+.env
+a.out
+.vscode
