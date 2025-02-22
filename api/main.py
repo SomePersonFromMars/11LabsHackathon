@@ -78,7 +78,7 @@ async def get_task(index: int):
     return {"error": 'handle this smh'}
 
 @app.get("/api/summarize_text")
-async def get_task(index: int):
+async def get_task():
     return {
         "message": f"Summar of interview",
         "status": "success",
@@ -86,7 +86,7 @@ async def get_task(index: int):
     }
     
 @app.get("/api/summarize_english_score")
-async def get_task(index: int):
+async def get_task():
     return {
         "message": f"Summar of interview english fluency",
         "status": "success",
@@ -94,13 +94,19 @@ async def get_task(index: int):
     }
 
 @app.get("/api/summarize_toxicity_score")
-async def get_task(index: int):
+async def get_task():
     return {
         "message": f"Summar of interview toxicity",
         "status": "success",
         "task": "toxicity score",
     }
-
+@app.get("/api/tasks_descriptions")
+async def get_task():
+    return {
+        "message": f"Summar of interview code score",
+        "status": "success",
+        "task": ['c++ task', 'python task', 'java task'],
+    }
 if __name__ == "__main__":
     print("Uruchamiam serwer!")
     uvicorn.run(app, host="127.0.0.1", port=8080)
