@@ -57,7 +57,7 @@ def compile_and_test(source_code, tests_paths = None, tests_dict = None):
     return status
 
 def main():
-    with open('tasks/0/sol1.cpp', 'r') as file:
+    with open('tasks/0/sol.cpp', 'r') as file:
         source_code = file.read()
 
     tests_paths = ['tasks/0/tests/0', 'tasks/0/tests/1', 'tasks/0/tests/2']

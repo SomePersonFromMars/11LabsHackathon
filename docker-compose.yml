@@ -20,6 +20,7 @@ services:
       context: ./api
     volumes:
       - ./api:/app
+      - ./solve_tester/tasks:/app/tasks
     # Unnecessary as the API is reverse-proxied through Nginx
     # ports:
     #   - "8000:8080"
