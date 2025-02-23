@@ -1,12 +1,14 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import uvicorn
 import os
+import websockets
 from solve_tester.solve_tester import *
 
 tasks = []
 source_codes = []
+dispatcher = None
 
 app = FastAPI()
 
@@ -20,6 +22,23 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
+@app.websocket("/ws")
+async def event_dispatcher(websocket: WebSocket):
+    await websocket.accept()
+    global dispatcher
+    dispatcher = websocket
+    while True:
+        json_data = await websocket.receive_json()
+        if json_data["event"] == "code":
+            code = json_data["data"]["code"]
+            index = json_data["data"]["index"]
+            source_codes[index] = code
+
+async def dispatch_event(event, data={}):
+    await dispatcher.send_json({
+        "event": event,
+        "data": data
+    })
 
 @app.on_event("startup")
 async def startup_event():
@@ -101,7 +120,12 @@ async def get_task_statement(index: int):
             statement = file.readlines()
     except Exception as e:
         return {"error": str(e)}, 500
-
+        
+    await dispatch_event("start_coding", {
+        "task": statement,
+        "index": index
+    })
+    
     return {
         "message": f"Task at index {index}",
         "status": "success",
