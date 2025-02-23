@@ -195,6 +195,9 @@ async def get_task_solutions(index: int):
 @app.get("/api/tasks_results")
 async def get_task_results(index: int):
     result = compile_and_test_task(source_codes[index], index, 'solve_tester/tasks')
+    await dispatch_event("tests", {
+        "result": result
+    })
     return result
 
 
