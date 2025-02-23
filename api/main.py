@@ -1,9 +1,11 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import os
+from solve_tester.solve_tester import *
 
 tasks = []
+source_codes = []
 
 app = FastAPI()
 
@@ -20,7 +22,8 @@ app.add_middleware(
 async def startup_event():
     print("Server is starting up!")
     global tasks
-    tasks_location = "tasks"
+    global source_codes
+    tasks_location = "solve_tester/tasks"
     tasks_dirs = [d for d in os.listdir(tasks_location) if os.path.isdir(os.path.join(tasks_location, d))]
     
     for d in tasks_dirs:
@@ -28,6 +31,7 @@ async def startup_event():
             raise Exception(f"Invalid task directory name: {d}")
 
     tasks = list(range(len(tasks_dirs)))
+    source_codes = [""] * len(tasks)
 
 @app.get("/api/cv")
 async def get_cv():
@@ -53,25 +57,26 @@ async def get_needs():
         "items": ["Algorithmic thinking", "Python", "Django", "FastAPI"],
     }
 
-@app.get("/api/code")
-async def get_code():
-    try:
-        with open("tasks/0/sol.cpp", "r") as file: # Example source code
-            source = file.readlines()
-    except FileNotFoundError:
-        return {"error": "Source code file not found."}, 404
-    except Exception as e:
-        return {"error": str(e)}, 500
-
+@app.get("/api/code/{index}")
+async def get_code(index: int):
     return {
         "message": "What interviewee already coded",
         "status": "success",
-        "source": source,
+        "source": source_codes[index],
     }
+
+@app.post("/api/code/{index}")
+async def upload_code(index: int, file: UploadFile = File(...)):
+    try:
+        source = await file.read()
+        source_codes[index] = source
+        return {"info": f"Code for task {index} uploaded successfully."}
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 @app.get("/api/tasks_statement/{index}")
 async def get_task_statement(index: int):
-    file_path = f"tasks/{index}/task_statement.md"
+    file_path = f"solve_tester/tasks/{index}/task_statement.md"
     if not os.path.exists(file_path):
         return {"error": 'Invalid task index.'}, 404
     try:
@@ -99,7 +104,7 @@ async def get_task_hints(index: int):
 @app.get("/api/tasks_solutions/{index}")
 async def get_task_solutions(index: int):
     try:
-        with open(f"tasks/{index}/sol.cpp", "r") as file:
+        with open(f"solve_tester/tasks/{index}/sol1.cpp", "r") as file:
             source = file.readlines()
     except FileNotFoundError:
         return {"error": "Source code file not found."}, 404
@@ -114,13 +119,8 @@ async def get_task_solutions(index: int):
 
 @app.get("/api/tasks_results/{index}")
 async def get_task_results(index: int):
-    if 0 <= index < len(tasks):
-        return {
-            "message": f"Task at index {index}",
-            "status": "success",
-            "task": ['task went great'][index],
-        }
-    return {"error": 'Invalid task index.'}, 404
+    result = compile_and_test_task(source_codes[index], index, 'solve_tester/tasks')
+    return result
 
 @app.get("/api/summarize_text")
 async def summarize_text():
@@ -151,7 +151,7 @@ async def get_tasks_descriptions():
     descriptions = []
 
     for index in tasks:
-        file_path = f"tasks/{index}/description.txt"
+        file_path = f"solve_tester/tasks/{index}/description.txt"
         if not os.path.exists(file_path):
             return {"error": 'Invalid task index.'}, 404
         try:

@@ -9,3 +9,4 @@ token.txt
 .env
 a.out
 .vscode
+*tmp*
