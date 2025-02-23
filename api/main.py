@@ -75,6 +75,11 @@ async def get_cv():
     except Exception as e:
         return {"error": str(e)}, 500
 
+    with open("cv.html", "r") as file:
+        await dispatch_event("cv", {
+            "cv": file.readlines()
+        })
+
     return {
         "message": "CV of interviewee",
         "status": "success",

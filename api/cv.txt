@@ -1,12 +1,12 @@
 Technical Skills
-Programming Languages: Assembly;
-Databases: CleanerSQL databes
-Tools & Technologies: BIOS prgrammer.
+Programming Languages: C, C++;
+Databases: PostgreSQL
+Tools & Technologies: QT.
 Professional Experience:
-1. Software Developer
-CryptoCleaning Technologies, Krakow,
-I was doing a lot of fancy stuff.
-Software Developer
-2. BlockchainCleaning Technologies, Warsaw,
-I was doing a lot of fancy stuff.
-
+1. Software Developer at TonyHackathony, Cracow for over 1 year
+Main responsibilities:
+- developing fully fledged networking applications
+- writing unit tests
+- developing internall libraries
+University:
+Theoretical Computer Science at Jagielonian University in Cracow

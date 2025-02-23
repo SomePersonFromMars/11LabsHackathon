@@ -1,15 +1,8 @@
-Proficient Python
-JavaScript experience
-Web frameworks
+Proficiency in C++
+Networking experience
+At least 1 year of commercial experience
+Some JavaScript experience
 Clean code
-Version control
-RESTful API
 Database management
 Problem-solving
-Team collaboration
-Good communication
-Cloud platforms
-Agile methodologies
-Quick learner
 Automated testing
-Debugging skills

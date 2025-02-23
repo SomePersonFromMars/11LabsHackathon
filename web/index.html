@@ -87,7 +87,10 @@
             color: white;
         }
 
-        .screening-part {
+        /* .screening-part {
+            display: none;
+        } */
+        .start {
             display: none;
         }
 
@@ -96,6 +99,11 @@
         }
         .widget_wrapper {
             align-items: center !important;
+        }
+        .divider {
+            height: 2px;
+            background-color: #263238;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -121,9 +129,20 @@
             </div>
         </div>
     </div>
-
-    <div id="nav-el-widget coding-part">
-        <!-- TODO add eleven labs widget -->
+    
+    <div class="screening-part">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div>
+                <div class="card shadow-container" style="border: none;">
+                    <div class="card-header text-center special-card-header">
+                        Your CV
+                    </div>
+                    <div class="card-body primary-color" id="cv-data">
+                        
+                    </div>
+                </div>     
+            </div>
+        </div>
     </div>
 
     <button type="button" class="btn custom-btn coding-part" id="modal-toggle" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -291,6 +310,9 @@ int main() {
                 document.getElementById("problem-desc").textContent = json.data.task;
                 task_index = json.data.index;
                 startPeriodicCodeSender();
+            } else if (json.event == "cv") {
+                moveToScreeningPart();
+                document.getElementById("cv-data").innerHTML = json.data.cv;
             }
         };
         document.getElementById("move-coding").onclick = moveToCodingPart;
