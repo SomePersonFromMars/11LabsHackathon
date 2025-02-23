@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Code Editor</title>
+    <!-- Bootstrap CSS -->
+    <link href="lib/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/material.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #263238;
+        }
+
+        .primary-color {
+            color: #263238;
+        }
+        .special-card-header {
+            background-color: #263238;
+            color: #f8f9fa;
+        }
+        .shadow-container {
+            -webkit-box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+            -moz-box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+            box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+        }
+
+        .editor-container {
+            /* border: 1px solid #ddd; */
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            height: 80vh;
+            font-size: 14px;
+        }
+
+        html,
+        body {
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+        .background {
+
+            position:
+                absolute;
+
+            display:
+                block;
+
+            top: 0;
+
+            left: 0;
+
+            z-index: 0;
+        }
+
+        #nav-el-widget {
+            position: absolute;
+            top: 1vh;
+            left: 1vw;
+
+        }
+        #modal-toggle {
+            position: absolute;
+            top: 1vh;
+            left: 1vw;
+            display: flex;
+            flex-direction: column;
+            gap: 1vh;
+        }
+
+
+        .custom-btn {
+            color: #263238;
+            border: 2px solid #263238;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            background-color: #263238;
+            color: white;
+        }
+
+        .screening-part {
+            display: none;
+        }
+        /* .start {
+            display: none;
+        } */
+
+        .coding-part {
+            display: none;
+        }
+        .widget_wrapper {
+            align-items: center !important;
+        }
+        .divider {
+            height: 2px;
+            background-color: #263238;
+            margin: 10px 0;
+        }
+        #tests-badge {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="background"></canvas>
+    
+    
+    <div class="start">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div>
+                <div class="card shadow-container" style="width: 36rem; border: none;">
+                    <div class="card-header text-center special-card-header">
+                        Interviewee #8080 summary
+                    </div>
+                    <div class="card-body primary-color" id="summary-data">
+
+                        <h6 class="card-title"><strong>Agent's summary</strong></h6>
+                        <div class="divider mb-3"></div>
+                        <p id="summary-text" class="mb-3 primary-color">
+                            The candidate confirmed their skills from the CV. However, they struggled significantly during the coding part and were unable to solve the problem. 
+                            Their understanding of C++ concepts was basic. Communication was clear, and English proficiency is at B2 level
+                        </p>
+                    
+
+                        <h6 class="card-title"><strong>English language level</strong></h6>
+                        <div class="divider mb-3"></div>
+                        <div class="row justify-content-center g-2 mb-3">
+                            <div class="col-auto">
+                                <button class="btn btn-secondary level-btn" disabled>A1</button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-secondary level-btn" disabled>A2</button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-secondary level-btn" disabled>B1</button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-success level-btn active">B2</button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-secondary level-btn" disabled>C1</button>
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-secondary level-btn" disabled>C2</button>
+                            </div>
+                        </div>
+
+                        <h6 class="card-title"><strong>Attitude</strong></h6>
+                        <div class="divider mb-3"></div>
+                        <div class="progress w-100 mb-3">
+                            <div class="progress-bar bg-success" style="width: 90%;">9/10</div>
+                        </div>
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </div>
+    
+    
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/c/c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+    <script>
+        Particles.init
+            ({
+
+                // normal options
+                selector:
+                    '.background'
+                ,
+                maxParticles:
+                    450
+                ,
+
+                // options for breakpoints
+                responsive: [
+                    {
+                        breakpoint:
+                            768
+                        ,
+                        options: {
+                            maxParticles:
+                                200
+                            ,
+                            color:
+                                '#263238'
+                            ,
+                            connectParticles:
+                                false
+                        }
+                    }, {
+                        breakpoint:
+                            425
+                        ,
+                        options: {
+                            maxParticles:
+                                100
+                            ,
+                            connectParticles:
+                                true
+                        }
+                    }, {
+                        breakpoint:
+                            320
+                        ,
+                        options: {
+                            maxParticles:
+                                0
+
+                            // disables particles.js
+                        }
+                    }
+                ]
+            });
+
+    </script>
+    <script>
+        async function summarize() {
+            // 1 - 10
+            let toxicity_level_req = await fetch("http://localhost:8000/api/get_sumarized_toxicity_score", {method: "GET"});            
+            let toxicity_level_json = await toxicity_level_req.json();
+            let toxicity_level = toxicity_level_json.toxicity;
+
+            // A1 A2 B1 B2 C1 C2
+            let english_score_req= await fetch("http://localhost:8000/api/get_summarized_english_score", {method: "GET"});            
+            let english_score_json = await english_score_req.json();
+            let english_score = english_score_json.level;
+
+            // summary
+            let text_req = await fetch("http://localhost:8000/api/get_summarized_text", {method: "GET"});            
+            let text_json = await text_req.json();
+            let text = text_json.text;
+
+        }
+
+        window.onload = summarize;
+    </script>
+</body>
+
+</html>
