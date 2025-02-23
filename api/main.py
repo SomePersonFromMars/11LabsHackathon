@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import uvicorn
 
 tasks = [1,2,3]
@@ -16,96 +17,95 @@ app.add_middleware(
 )
 
 @app.get("/api/cv")
-async def get_data():
+async def get_cv():
     data = open("cv.txt", "r").readlines()
     print(data)
     return {
         "message": "CV of interviewee",
         "status": "success",
-        "items": data,
+        "CV": data,
     }
 @app.get("/api/needs")
-async def get_data():
+async def get_needs():
     return {
         "message": "What you should know about interviewee and what skills he should has",
         "status": "success",
-        "items": ["Algorithmic thinking", "Python", "Django", "FastAPI"],
+        "items": ["assembly"],
     }
 @app.get("/api/code")
-async def get_data():
+async def get_code():
+    data = open("code.txt", "r").readlines()
     return {
         "message": "What interviewee already coded",
         "status": "success",
-        "items": "list.bin_search(3)",
+        "code": data,
     }
-@app.get("/api/tasks_statement/{index}")
-async def get_task(index: int):
+@app.get("/api/tasks_statement")
+async def get_task_statment(index: int):
     if 0 <= index < len(tasks):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['say dog', 'say monkey', 'say hubert'][index],
+            "task": ['say dog', 'write entire framework for exchange of etherium', 'say hubert'][index],
         }
     return {"error": 'handle this smh'}, 404
 
-@app.get("/api/tasks_hints/{index}")
-async def get_task(index: int):
+@app.get("/api/tasks_hints")
+async def get_task_hints(index: int):
     if 0 <= index < len(tasks):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['say dog', 'say monkey', 'say hubert'][index],
+            "task": ['say dog', 'use cryptix AI software to automate writing.', 'say hubert'][index],
         }
     return {"error": 'handle this smh'}
-@app.get("/api/tasks_solutions/{index}")
-async def get_task(index: int):
+@app.get("/api/tasks_solutions")
+async def get_task_solutions(index: int):
     if 0 <= index < len(tasks):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": [['dog'], ['monkey'], ['hubert']][index],
+            "task": [['dog'], ['just type cryptix.framework'], ['hubert']][index],
         }
     return {"error": 'handle this smh'}
 
-@app.get("/api/tasks_results/{index}")
-async def get_task(index: int):
+@app.get("/api/tasks_results")
+async def get_task_results(index: int):
     if 0 <= index < len(tasks):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['task went great'][index],
+            "task": ['task went great','task went great','task went great'][index],
         }
     return {"error": 'handle this smh'}
 
-@app.get("/api/summarize_text")
-async def get_task():
-    return {
-        "message": f"Summar of interview",
-        "status": "success",
-        "task": "text",
-    }
-    
-@app.get("/api/summarize_english_score")
-async def get_task():
-    return {
-        "message": f"Summar of interview english fluency",
-        "status": "success",
-        "task": "english score",
-    }
+class TextRequest(BaseModel):
+    text: str
+class LevelRequest(BaseModel):
+    level: str
+class ToxicityRequest(BaseModel):
+    toxicity: int
+@app.post("/api/summarize_text")
+async def post_text_summary(request: TextRequest):
+    print(request.text)
+    return {"text": request.text} 
 
-@app.get("/api/summarize_toxicity_score")
-async def get_task():
-    return {
-        "message": f"Summar of interview toxicity",
-        "status": "success",
-        "task": "toxicity score",
-    }
+@app.post("/api/summarize_english_score")
+async def get_sec(request: LevelRequest):
+    print(request.level)
+    return {"level": request.level} 
+
+@app.post("/api/summarize_toxicity_score")
+async def get_stc(request: ToxicityRequest):
+    print(request.toxicity)
+    return {"toxicity": request.toxicity} 
+
 @app.get("/api/tasks_descriptions")
-async def get_task():
+async def get_task_descriptions():
     return {
         "message": f"Summar of interview code score",
         "status": "success",
-        "task": ['c++ task', 'python task', 'java task'],
+        "task": ['0. c++ task', '1. assembly task', '2. java task'],
     }
 if __name__ == "__main__":
     print("Uruchamiam serwer!")
