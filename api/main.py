@@ -42,6 +42,8 @@ async def dispatch_event(event, data={}):
         "data": data
     })
 
+
+
 @app.on_event("startup")
 async def startup_event():
     print("Server is starting up!")
@@ -76,8 +78,10 @@ async def get_cv():
         return {"error": str(e)}, 500
 
     with open("cv.html", "r") as file:
+        lines = file.readlines()
+        single_string = ''.join(line.strip() for line in lines)
         await dispatch_event("cv", {
-            "cv": file.readlines()
+            "cv": single_string
         })
 
     return {
