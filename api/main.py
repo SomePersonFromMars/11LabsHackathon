@@ -204,10 +204,17 @@ class ToxicityRequest(BaseModel):
     toxicity: int
 
 
+summarized_text = ""
 @app.post("/api/summarize_text")
 async def post_text_summary(request: TextRequest):
     print(request.text)
+    summarized_text = request.text
     return {"text": request.text} 
+
+
+@app.get("/api/get_summarized_text")
+async def get_summarized_text():
+    return {"text": summarized_text}
 
 
 @app.get("/api/run_tests")
@@ -215,16 +222,30 @@ async def post_text_summary():
     return {"text": 'tests passed'} 
 
 
+summarized_english_score = ""
 @app.post("/api/summarize_english_score")
 async def get_sec(request: LevelRequest):
     print(request.level)
+    summarized_english_score = request.level
     return {"level": request.level} 
 
 
+@app.get("/api/get_summarized_english_score")
+async def get_summarized_english_score():
+    return {"level": summarized_english_score}
+
+
+summarized_toxicity_score = ""
 @app.post("/api/summarize_toxicity_score")
 async def get_stc(request: ToxicityRequest):
     print(request.toxicity)
+    summarized_toxicity_score = request.toxicity
     return {"toxicity": request.toxicity} 
+
+
+@app.get("/api/get_summarized_toxicity_score")
+async def get_summarized_toxicity_score():
+    return {"toxicity": summarized_toxicity_score}
 
 
 @app.get("/api/tasks_descriptions")
