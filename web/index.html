@@ -73,7 +73,7 @@
         #modal-toggle {
             position: absolute;
             top: 1vh;
-            right: 1vw;
+            left: 1vw;
         }
         .custom-btn {
             color: #263238;
@@ -94,11 +94,17 @@
         .coding-part {
             display: none;
         }
+        .widget_wrapper {
+            align-items: center !important;
+        }
     </style>
 </head>
 
 <body>
     <canvas class="background"></canvas>
+    
+    <elevenlabs-convai agent-id="SWfXuyE5ZQYUlYpecvg4"></elevenlabs-convai>
+    <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
     
     <div class="start">
         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
@@ -288,6 +294,7 @@ int main() {
             }
         };
         document.getElementById("move-coding").onclick = moveToCodingPart;
+
     </script>
 </body>
 
