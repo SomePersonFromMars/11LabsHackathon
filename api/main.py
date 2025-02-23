@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import uvicorn
 import os
 from solve_tester.solve_tester import *
@@ -9,6 +10,7 @@ source_codes = []
 
 app = FastAPI()
 
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
@@ -17,6 +19,7 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
 )
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -33,6 +36,7 @@ async def startup_event():
     tasks = list(range(len(tasks_dirs)))
     source_codes = [""] * len(tasks)
 
+
 @app.get("/api/cv")
 async def get_cv():
     try:
@@ -46,18 +50,29 @@ async def get_cv():
     return {
         "message": "CV of interviewee",
         "status": "success",
-        "items": data,
+        "CV": data,
     }
+
 
 @app.get("/api/needs")
 async def get_needs():
     return {
-        "message": "What you should know about interviewee and what skills he should has",
+        "message": "What you should know about interviewee and what skills he should have",
         "status": "success",
-        "items": ["Algorithmic thinking", "Python", "Django", "FastAPI"],
+        "items": ["assembly"],
     }
 
-@app.get("/api/code/{index}")
+
+@app.get("/api/code")
+async def get_data():
+    return {
+        "message": "What interviewee already coded",
+        "status": "success",
+        "items": "list.bin_search(3)",
+    }
+
+
+@app.get("/api/code_for_task")
 async def get_code(index: int):
     return {
         "message": "What interviewee already coded",
@@ -65,7 +80,8 @@ async def get_code(index: int):
         "source": source_codes[index],
     }
 
-@app.post("/api/code/{index}")
+
+@app.post("/api/code_for_task")
 async def upload_code(index: int, file: UploadFile = File(...)):
     try:
         source = await file.read()
@@ -74,7 +90,8 @@ async def upload_code(index: int, file: UploadFile = File(...)):
     except Exception as e:
         return {"error": str(e)}, 500
 
-@app.get("/api/tasks_statement/{index}")
+
+@app.get("/api/tasks_statement")
 async def get_task_statement(index: int):
     file_path = f"solve_tester/tasks/{index}/task_statement.md"
     if not os.path.exists(file_path):
@@ -91,17 +108,19 @@ async def get_task_statement(index: int):
         "task": statement,
     }
 
-@app.get("/api/tasks_hints/{index}")
-async def get_task_hints(index: int):
+
+@app.get("/api/tasks_hints")
+async def get_task_hints_hints(index: int):
     if 0 <= index < len(tasks):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['say dog', 'say monkey', 'say hubert'][index],
+            "task": ['say dog', 'divide evertyhing in two parts', 'say hubert'][index],
         }
     return {"error": 'Invalid task index.'}, 404
 
-@app.get("/api/tasks_solutions/{index}")
+
+@app.get("/api/tasks_solutions")
 async def get_task_solutions(index: int):
     try:
         with open(f"solve_tester/tasks/{index}/sol1.cpp", "r") as file:
@@ -117,34 +136,45 @@ async def get_task_solutions(index: int):
         "source": source,
     }
 
-@app.get("/api/tasks_results/{index}")
+
+@app.get("/api/tasks_results")
 async def get_task_results(index: int):
     result = compile_and_test_task(source_codes[index], index, 'solve_tester/tasks')
     return result
 
-@app.get("/api/summarize_text")
-async def summarize_text():
-    return {
-        "message": f"Summary of interview",
-        "status": "success",
-        "task": "text",
-    }
 
-@app.get("/api/summarize_english_score")
-async def summarize_english_score():
-    return {
-        "message": f"Summary of interview english fluency",
-        "status": "success",
-        "task": "english score",
-    }
+class TextRequest(BaseModel):
+    text: str
 
-@app.get("/api/summarize_toxicity_score")
-async def summarize_toxicity_score():
-    return {
-        "message": f"Summary of interview toxicity",
-        "status": "success",
-        "task": "toxicity score",
-    }
+class LevelRequest(BaseModel):
+    level: str
+
+class ToxicityRequest(BaseModel):
+    toxicity: int
+
+
+@app.post("/api/summarize_text")
+async def post_text_summary(request: TextRequest):
+    print(request.text)
+    return {"text": request.text} 
+
+
+@app.get("/api/run_tests")
+async def post_text_summary():
+    return {"text": 'tests passed'} 
+
+
+@app.post("/api/summarize_english_score")
+async def get_sec(request: LevelRequest):
+    print(request.level)
+    return {"level": request.level} 
+
+
+@app.post("/api/summarize_toxicity_score")
+async def get_stc(request: ToxicityRequest):
+    print(request.toxicity)
+    return {"toxicity": request.toxicity} 
+
 
 @app.get("/api/tasks_descriptions")
 async def get_tasks_descriptions():
@@ -162,8 +192,9 @@ async def get_tasks_descriptions():
     return {
         "message": f"Tasks list.",
         "status": "success",
-        "tasks_list": descriptions,
+        "task": descriptions,
     }
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8080)
