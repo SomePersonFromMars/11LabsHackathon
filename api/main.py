@@ -7,8 +7,10 @@ import websockets
 from solve_tester.solve_tester import *
 
 tasks = []
+# Codes submitted by the user for each of the tasks
 source_codes = []
 dispatcher = None
+active_task_index = 0
 
 app = FastAPI()
 
@@ -54,6 +56,13 @@ async def startup_event():
 
     tasks = list(range(len(tasks_dirs)))
     source_codes = [""] * len(tasks)
+    source_codes[0] = """#include <iostream>
+    using namespace std;
+    
+    int main() {
+        cout << "Hello, World!" << endl;
+        return 0;
+    }"""
 
 
 @app.get("/api/cv")
@@ -75,10 +84,17 @@ async def get_cv():
 
 @app.get("/api/needs")
 async def get_needs():
+    try:
+        with open("company_needs.txt", "r") as file:
+            needs = file.readlines()
+    except FileNotFoundError:
+        return {"error": "company_needs.txt file not found."}, 404
+    except Exception as e:
+        return {"error": str(e)}, 500
     return {
         "message": "What you should know about interviewee and what skills he should have",
         "status": "success",
-        "items": ["assembly"],
+        "items": needs,
     }
 
 
@@ -87,7 +103,7 @@ async def get_data():
     return {
         "message": "What interviewee already coded",
         "status": "success",
-        "items": "list.bin_search(3)",
+        "items": source_codes[active_task_index],
     }
 
 
@@ -135,13 +151,19 @@ async def get_task_statement(index: int):
 
 @app.get("/api/tasks_hints")
 async def get_task_hints_hints(index: int):
-    if 0 <= index < len(tasks):
-        return {
-            "message": f"Task at index {index}",
-            "status": "success",
-            "task": ['say dog', 'divide evertyhing in two parts', 'say hubert'][index],
-        }
-    return {"error": 'Invalid task index.'}, 404
+    file_path = f"solve_tester/tasks/{index}/hints.txt"
+    if not os.path.exists(file_path):
+        return {"error": 'Invalid task index.'}, 404
+    try:
+        with open(file_path, "r") as file:
+            hints = file.readlines()
+    except Exception as e:
+        return {"error": str(e)}, 500
+    return {
+        "message": f"Task at index {index}",
+        "status": "success",
+        "task": hints,
+    }
 
 
 @app.get("/api/tasks_solutions")
