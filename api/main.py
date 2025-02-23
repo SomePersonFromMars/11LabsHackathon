@@ -46,7 +46,7 @@ async def get_task_statment(index: int):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['say dog', 'write entire framework for exchange of etherium', 'say hubert'][index],
+            "task": ['say dog', 'write binsearch', 'say hubert'][index],
         }
     return {"error": 'handle this smh'}, 404
 
@@ -56,7 +56,7 @@ async def get_task_hints(index: int):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": ['say dog', 'use cryptix AI software to automate writing.', 'say hubert'][index],
+            "task": ['say dog', 'divide evertyhing in two parts', 'say hubert'][index],
         }
     return {"error": 'handle this smh'}
 @app.get("/api/tasks_solutions")
@@ -65,7 +65,7 @@ async def get_task_solutions(index: int):
         return {
             "message": f"Task at index {index}",
             "status": "success",
-            "task": [['dog'], ['just type cryptix.framework'], ['hubert']][index],
+            "task": [['dog'], ['its simple'], ['hubert']][index],
         }
     return {"error": 'handle this smh'}
 
@@ -89,7 +89,9 @@ class ToxicityRequest(BaseModel):
 async def post_text_summary(request: TextRequest):
     print(request.text)
     return {"text": request.text} 
-
+@app.get("/api/run_tests")
+async def post_text_summary():
+    return {"text": 'tests passed'} 
 @app.post("/api/summarize_english_score")
 async def get_sec(request: LevelRequest):
     print(request.level)

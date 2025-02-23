@@ -1,45 +1,12 @@
-Professional Summary
-Detail-oriented and innovative software developer with over 5 years of experience in designing, developing, and maintaining applications. Proficient in a variety of programming languages and technologies, including Python, JavaScript, and SQL. Passionate about developing efficient and scalable solutions, with a strong focus on user experience and code quality.
-
 Technical Skills
-Programming Languages: Python, JavaScript, Java, C#
-Web Technologies: HTML, CSS, React, Node.js, Flask
-Databases: MySQL, PostgreSQL, MongoDB
-Tools & Technologies: Git, Docker, Jenkins, AWS
-Frameworks: Django, Express.js, Angular
-Methodologies: Agile, Scrum
-Professional Experience
+Programming Languages: Assembly;
+Databases: CleanerSQL databes
+Tools & Technologies: BIOS prgrammer.
+Professional Experience:
+1. Software Developer
+CryptoCleaning Technologies, Krakow,
+I was doing a lot of fancy stuff.
 Software Developer
-XYZ Technologies, City, State
-June 2020 – Present
+2. BlockchainCleaning Technologies, Warsaw,
+I was doing a lot of fancy stuff.
 
-Developed and maintained web applications using React and Node.js, improving user engagement by 30%.
-Collaborated with cross-functional teams to define, design, and ship new features in an Agile environment.
-Implemented RESTful APIs for seamless integration with third-party services, enhancing application functionality.
-Conducted code reviews and provided mentorship to junior developers, fostering a collaborative team environment.
-Junior Developer
-ABC Solutions, City, State
-January 2018 – May 2020
-
-Assisted in the development of internal tools using Python and Django, streamlining workflow and increasing productivity.
-Collaborated with designers to create user-friendly interfaces for web applications.
-Wrote and maintained automated tests to ensure code quality and reliability.
-Participated in daily stand-ups and sprint planning sessions, contributing to project timelines and deliverables.
-Education
-Bachelor of Science in Computer Science
-University of Technology, City, State
-Graduated: May 2017
-
-Certifications
-AWS Certified Solutions Architect – Associate (2022)
-Certified ScrumMaster (CSM) (2021)
-Projects
-Personal Portfolio Website
-
-Designed and developed a responsive portfolio website using HTML, CSS, and JavaScript to showcase personal projects and skills.
-Task Management App
-
-Created a task management application using React and Node.js, allowing users to track tasks and collaborate with others in real-time.
-Professional Affiliations
-Member of the Association for Computing Machinery (ACM)
-Contributor to open-source projects on GitHub
