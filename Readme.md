@@ -13,3 +13,4 @@ For full experience you need to:
 - run ngrok locally
 - enjoy 😄
 
+> if u plan to use hosted one pls use it one at a time this tool is just a PoC and was not prepered for few parallel connections
