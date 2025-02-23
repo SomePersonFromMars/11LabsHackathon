@@ -188,6 +188,53 @@ async def get_task_results(index: int):
     result = compile_and_test_task(source_codes[index], index, 'solve_tester/tasks')
     return result
 
+@app.get("/api/tasks_results_table")
+async def get_task_results_table(index: int):
+    result = compile_and_test_task(source_codes[index], index, 'solve_tester/tasks')
+    if "tests" not in result:
+        if "compilation" in result:
+            # Return an orange row with the compile error message
+            compile_error = result["compilation"]["output"]
+            table = "<table class='table'><thead><tr><th>Compilation Error</th></tr></thead><tbody>"
+            table += f"<tr class='table-warning'><td>{compile_error}</td></tr>"
+            table += "</tbody></table>"
+            return {"result": table}
+        else:
+            return {"result": "No tests were run."}
+    
+    # Collect all unique headers from all test results
+    headers = set()
+    for test_result in result["tests"].values():
+        headers.update(test_result.keys())
+    
+    # Define the desired order of columns
+    ordered_headers = ["Test Name", "expected", "actual", "status"]
+    # Add any additional headers that are not in the predefined list
+    additional_headers = [header for header in headers if header not in ordered_headers]
+    headers = ordered_headers + additional_headers
+    
+    table = "<table class='table'><thead><tr>"
+    for header in headers:
+        table += f"<th>{header}</th>"
+    table += "</tr></thead><tbody>"
+    
+    for test_name, test_result in result["tests"].items():
+        row_class = ""
+        if test_result["status"] == "PASSED":
+            row_class = "table-success"
+        elif test_result["status"] == "FAILED" and "compilation" in test_result:
+            row_class = "table-warning"
+        else:
+            row_class = "table-danger"
+        
+        table += f"<tr class='{row_class}'><td>{test_name}</td>"
+        for header in headers[1:]:  # Skip "Test Name" header
+            value = test_result.get(header, "")
+            table += f"<td>{value}</td>"
+        table += "</tr>"
+    table += "</tbody></table>"
+    return {"result": table}
+
 
 class TextRequest(BaseModel):
     text: str

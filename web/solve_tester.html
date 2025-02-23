@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ Code Editor</title>
+    <!-- Bootstrap CSS -->
+    <link href="lib/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/theme/material.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #263238;
+        }
+
+        .primary-color {
+            color: #263238;
+        }
+        .special-card-header {
+            background-color: #263238;
+            color: #f8f9fa;
+        }
+        .shadow-container {
+            -webkit-box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+            -moz-box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+            box-shadow: 0px 0px 20px 0px rgba(38,50,56,1);
+        }
+
+        .editor-container {
+            /* border: 1px solid #ddd; */
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            height: 80vh;
+            font-size: 14px;
+        }
+
+        html,
+        body {
+
+            margin: 0;
+
+            padding: 0;
+        }
+
+        .background {
+
+            position:
+                absolute;
+
+            display:
+                block;
+
+            top: 0;
+
+            left: 0;
+
+            z-index: 0;
+        }
+
+        #nav-el-widget {
+            position: absolute;
+            top: 1vh;
+            left: 1vw;
+
+        }
+        #modal-toggle {
+            position: absolute;
+            top: 1vh;
+            right: 1vw;
+        }
+        .custom-btn {
+            color: #263238;
+            border: 2px solid #263238;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .custom-btn:hover {
+            background-color: #263238;
+            color: white;
+        }
+
+        .screening-part {
+            display: none;
+        }
+
+        .coding-part {
+            display: none;
+        }
+        .widget_wrapper {
+            align-items: center !important;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas class="background"></canvas>
+    
+    <elevenlabs-convai agent-id="SWfXuyE5ZQYUlYpecvg4"></elevenlabs-convai>
+    <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+    
+    <div class="start">
+        <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+            <div>
+                <div class="card shadow-container" style="width: 24rem; border: none;">
+                    <div class="card-header text-center special-card-header">
+                        Hackathon.io
+                    </div>
+                    <div class="card-body primary-color">
+                        Hi, huge thanks for your interest in our company! Are you ready to start the interview?
+                        <button id="move-coding">coding</button>
+                    </div>
+                </div>     
+            </div>
+        </div>
+    </div>
+
+    <div id="nav-el-widget coding-part">
+        <!-- TODO add eleven labs widget -->
+    </div>
+
+    <button type="button" class="btn custom-btn coding-part" id="modal-toggle" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+            <path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+          </svg>
+    </button>
+    
+    <div class="container coding-part" style="padding: 20px;">
+        <h1 class="text-center mb-4">Your Coding Challenge</h1>
+        <div class="editor-container shadow-container">
+            <textarea id="code" name="code">#include &lt;iostream&gt;
+
+int main() {
+    std::cout &lt;&lt; "Hello, World!" &lt;&lt; std::endl;
+    return 0;
+}</textarea>
+        </div>
+        <button id="run-tests" class="btn btn-primary mt-3">Run Tests</button>
+        <div id="results" class="mt-3"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade primary-color" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Problem description</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="problem-desc">
+                <!-- TODO implement updating problem desc -->
+            </div>
+        </div>
+        </div>
+    </div> 
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="lib/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <!-- CodeMirror JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/clike/clike.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/c/c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+    <script>
+        Particles.init
+            ({
+
+                // normal options
+                selector:
+                    '.background'
+                ,
+                maxParticles:
+                    450
+                ,
+
+                // options for breakpoints
+                responsive: [
+                    {
+                        breakpoint:
+                            768
+                        ,
+                        options: {
+                            maxParticles:
+                                200
+                            ,
+                            color:
+                                '#263238'
+                            ,
+                            connectParticles:
+                                false
+                        }
+                    }, {
+                        breakpoint:
+                            425
+                        ,
+                        options: {
+                            maxParticles:
+                                100
+                            ,
+                            connectParticles:
+                                true
+                        }
+                    }, {
+                        breakpoint:
+                            320
+                        ,
+                        options: {
+                            maxParticles:
+                                0
+
+                            // disables particles.js
+                        }
+                    }
+                ]
+            });
+
+    </script>
+    <script>
+
+        const socket = new WebSocket("ws://localhost:8000/ws");
+        let editor;
+        let task_index;
+
+        // changes state from starting state to
+        async function moveToScreeningPart() {
+            socket.send(JSON.stringify({
+                event: "started_screening",
+                data: {} 
+            }))
+            document.querySelectorAll('.screening-part').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.start').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.screening-part').forEach(el => {
+                el.style.display = "block";
+            });
+        }
+
+        // changes state from screening state to coding
+        async function moveToCodingPart() {
+            socket.send(JSON.stringify({
+                event: "started_coding",
+                data: {}
+            }))
+            document.querySelectorAll('.screening-part').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.start').forEach(el => {
+                el.style.display = 'none';
+            });
+            document.querySelectorAll('.coding-part').forEach(el => {
+                el.style.display = "block";
+            });
+            
+            editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                mode: "text/x-c++src",
+                theme: "material"
+            });
+            let problem_desc_el = document.getElementById("problem-desc");
+            editor.getValue();
+        }
+
+        function startPeriodicCodeSender() {
+            setInterval(async () => {
+                socket.send(JSON.stringify({
+                    event: "code",
+                    data: {
+                        index: task_index,
+                        code: editor.getValue()
+                    }
+                }));
+            }, 1000);
+        }
+
+        socket.onmessage = (event) => {
+            const json = JSON.parse(event.data);
+            if (json.event == "start_coding") {
+                moveToCodingPart();
+                document.getElementById("problem-desc").textContent = json.data.task;
+                task_index = json.data.index;
+                startPeriodicCodeSender();
+            }
+        };
+        document.getElementById("move-coding").onclick = moveToCodingPart;
+
+        document.getElementById("run-tests").onclick = async function() {
+            const response = await fetch(`/api/tasks_results_table?index=0`);
+            const data = await response.json();
+            document.getElementById("results").innerHTML = data.result;
+        };
+    </script>
+</body>
+
+</html>
