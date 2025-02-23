@@ -179,16 +179,17 @@ async def get_stc(request: ToxicityRequest):
 @app.get("/api/tasks_descriptions")
 async def get_tasks_descriptions():
     descriptions = []
-
+    i=0
     for index in tasks:
         file_path = f"solve_tester/tasks/{index}/description.txt"
         if not os.path.exists(file_path):
             return {"error": 'Invalid task index.'}, 404
         try:
             with open(file_path, "r") as file:
-                descriptions.append(file.read())
+                descriptions.append(f"{i}:"+file.read())
         except Exception as e:
             return {"error": str(e)}, 500
+        i+=1
     return {
         "message": f"Tasks list.",
         "status": "success",
